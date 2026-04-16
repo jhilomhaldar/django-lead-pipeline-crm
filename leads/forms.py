@@ -12,5 +12,5 @@ class LeadForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'company': forms.TextInput(attrs={'class': 'form-control'}),
-            'status': forms.TextInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
         }

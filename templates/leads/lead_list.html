@@ -1,18 +1,38 @@
 {% extends 'base.html' %}
 
-{% block title %}Leads | Room CRM{% endblock %}
+{% block page_title %}Leads{% endblock %}
+{% block page_subtitle %}Manage all your leads from one place.{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="mb-1">Leads</h2>
-            <p class="text-muted mb-0">Manage all your leads from one place.</p>
-        </div>
-        <a href="/leads/add/" class="btn btn-primary">
+    <div class="d-flex justify-content-between align-items-center mb-4">      
+
+       <div class="d-flex gap-2">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="q" class="form-control" placeholder="Search leads..." value="{{ request.GET.q }}">
+
+            <select name="status" class="form-select">
+                <option value="">All Status</option>
+                <option value="New" {% if request.GET.status == 'New' %}selected{% endif %}>New</option>
+                <option value="Contacted" {% if request.GET.status == 'Contacted' %}selected{% endif %}>Contacted</option>
+                <option value="Qualified" {% if request.GET.status == 'Qualified' %}selected{% endif %}>Qualified</option>
+                <option value="Lost" {% if request.GET.status == 'Lost' %}selected{% endif %}>Lost</option>
+            </select>
+
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+
+            <a href="{% url 'lead_list' %}" class="btn btn-outline-dark">
+                <i class="fa fa-rotate-left"></i>
+            </a>
+        </form>
+
+        <a href="{% url 'lead_create' %}" class="btn btn-primary">
             <i class="fa-solid fa-plus me-1"></i> Add New Lead
         </a>
+    </div>
     </div>
 
     <div class="card shadow-sm border-0">
@@ -37,11 +57,27 @@
                             <td>{{ lead.phone }}</td>
                             <td>{{ lead.company }}</td>
                             <td>
-                                <span class="badge bg-primary">{{ lead.status }}</span>
+                               {% if lead.status == 'New' %}
+                                    <span class="badge bg-primary">{{ lead.status }}</span>
+                                {% elif lead.status == 'Contacted' %}
+                                    <span class="badge bg-info text-dark">{{ lead.status }}</span>
+                                {% elif lead.status == 'Qualified' %}
+                                    <span class="badge bg-success">{{ lead.status }}</span>
+                                {% elif lead.status == 'Lost' %}
+                                    <span class="badge bg-danger">{{ lead.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ lead.status }}</span>
+                                {% endif %}
                             </td>
-                            <td>
-                                <a href="/leads/edit/{{ lead.id }}/" class="btn btn-sm btn-warning">
+                           <td>
+                               <a href="{% url 'lead_edit' lead.id %}" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-pen"></i> Edit
+                                </a>
+
+                                <a href="javascript:void(0);"
+                                class="btn btn-sm btn-danger delete-lead-btn"
+                                data-url="{% url 'lead_delete' lead.id %}">
+                                    <i class="fa-solid fa-trash"></i> Delete
                                 </a>
                             </td>
                         </tr>
@@ -55,6 +91,76 @@
             </div>
         </div>
     </div>
+    {% if leads.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
 
+            {% if leads.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ leads.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
+                        Previous
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+            {% endif %}
+
+            {% for num in leads.paginator.page_range %}
+                {% if leads.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if leads.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ leads.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
+                        Next
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+    {% endif %}
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.delete-lead-btn');
+
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const deleteUrl = this.getAttribute('data-url');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This lead will be deleted permanently.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

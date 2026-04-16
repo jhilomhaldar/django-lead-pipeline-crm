@@ -1,31 +1,60 @@
 {% extends 'base.html' %}
 
-{% block title %}Leads{% endblock %}
+{% block title %}Leads | Room CRM{% endblock %}
 
 {% block content %}
-    <h2>Leads List</h2>
+<div class="container-fluid">
 
-    <table border="1" cellpadding="10">
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Company</th>
-            <th>Status</th>
-        </tr>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Leads</h2>
+            <p class="text-muted mb-0">Manage all your leads from one place.</p>
+        </div>
+        <a href="/leads/add/" class="btn btn-primary">
+            <i class="fa-solid fa-plus me-1"></i> Add New Lead
+        </a>
+    </div>
 
-        {% for lead in leads %}
-        <tr>
-            <td>{{ lead.first_name }} {{ lead.last_name }}</td>
-            <td>{{ lead.email }}</td>
-            <td>{{ lead.phone }}</td>
-            <td>{{ lead.company }}</td>
-            <td>{{ lead.status }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No leads found</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lead in leads %}
+                        <tr>
+                            <td>{{ lead.first_name }} {{ lead.last_name }}</td>
+                            <td>{{ lead.email }}</td>
+                            <td>{{ lead.phone }}</td>
+                            <td>{{ lead.company }}</td>
+                            <td>
+                                <span class="badge bg-primary">{{ lead.status }}</span>
+                            </td>
+                            <td>
+                                <a href="/leads/edit/{{ lead.id }}/" class="btn btn-sm btn-warning">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No leads found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

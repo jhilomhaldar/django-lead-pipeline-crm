@@ -41,17 +41,20 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
+                            <th>SL</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Company</th>
                             <th>Status</th>
+                            <th>Created</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for lead in leads %}
                         <tr>
+                            <td>{{ leads.start_index|add:forloop.counter0 }}</td>
                             <td>{{ lead.first_name }} {{ lead.last_name }}</td>
                             <td>{{ lead.email }}</td>
                             <td>{{ lead.phone }}</td>
@@ -69,6 +72,7 @@
                                     <span class="badge bg-secondary">{{ lead.status }}</span>
                                 {% endif %}
                             </td>
+                            <td>{{ lead.created_at|date:"d M Y, h:i A" }}</td>
                            <td>
                                <a href="{% url 'lead_edit' lead.id %}" class="btn btn-sm btn-warning">
                                     <i class="fa-solid fa-pen"></i> Edit
@@ -83,7 +87,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center text-muted">No leads found</td>
+                            <td colspan="8" class="text-center text-muted">No leads found</td>
                         </tr>
                         {% endfor %}
                     </tbody>

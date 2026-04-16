@@ -66,28 +66,39 @@ django-lead-pipeline-crm/
 ```bash
 git clone https://github.com/jhilomhaldar/django-lead-pipeline-crm.git
 cd django-lead-pipeline-crm
+```
 
 
 ### 2. Create Virtual Environment
 
+```bash
 python -m venv venv
 venv\Scripts\activate   # Windows
+```
 
 ### 3. Install Dependencies
 
+```bash
 pip install django
+```
 
 ### 4. Run Migrations
 
+```bash
 python manage.py migrate
+```
 
 ### 5. Create Superuser
 
+```bash
 python manage.py createsuperuser
+```
 
 ### 6. Run Server
 
+```bash
 python manage.py runserver
+```
 
 ### Open:
 
@@ -110,17 +121,9 @@ REST API Integration
 
 Jhilom Haldar
 
-📄 License
+## 📄 License
 
 This project is for learning and development purposes.
 
 
 ---
-
-## Next Step
-
-After adding this, run:
-
-```bash
-git add README.md
-git commit -m "Added project README"

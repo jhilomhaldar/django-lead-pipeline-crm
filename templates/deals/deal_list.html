@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Deals</h2>
+        <div>
+            <a href="{% url 'deal_pipeline' %}" class="btn btn-info me-2">
+                <i class="fas fa-columns"></i> Pipeline
+            </a>
+            <a href="{% url 'deal_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Deal
+            </a>
+        </div>
+    </div>
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <form method="get">
+                <div class="row g-2">
+
+                    <div class="col-md-3">
+                        <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search title...">
+                    </div>
+
+                    <div class="col-md-2">
+                        <select name="stage" class="form-select">
+                            <option value="">All Stages</option>
+                            <option value="new" {% if selected_stage == 'new' %}selected{% endif %}>New</option>
+                            <option value="qualified" {% if selected_stage == 'qualified' %}selected{% endif %}>Qualified</option>
+                            <option value="proposal" {% if selected_stage == 'proposal' %}selected{% endif %}>Proposal</option>
+                            <option value="won" {% if selected_stage == 'won' %}selected{% endif %}>Won</option>
+                            <option value="lost" {% if selected_stage == 'lost' %}selected{% endif %}>Lost</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="lead" class="form-select">
+                            <option value="">All Leads</option>
+                            {% for lead in leads %}
+                                <option value="{{ lead.id }}" {% if selected_lead == lead.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ lead }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="number" name="min_value" value="{{ min_value }}" class="form-control" placeholder="Min ₹">
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="number" name="max_value" value="{{ max_value }}" class="form-control" placeholder="Max ₹">
+                    </div>
+
+                    <div class="col-md-12 mt-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Filter
+                        </button>
+
+                        <a href="{% url 'deal_list' %}" class="btn btn-secondary">
+                            Reset
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if deals %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Lead</th>
+                            <th>Value</th>
+                            <th>Stage</th>
+                            <th>Expected Close Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for deal in deals %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'deal_detail' deal.pk %}" class="text-decoration-none fw-semibold">
+                                    {{ deal.title }}
+                                </a>
+                            </td>
+                           <td>{{ deal.lead }}</td>
+                            <td>₹{{ deal.value }}</td>
+                            <td>
+                               {% if deal.stage == 'new' %}
+                                    <span class="badge bg-secondary">{{ deal.get_stage_display }}</span>
+                                {% elif deal.stage == 'qualified' %}
+                                    <span class="badge bg-primary">{{ deal.get_stage_display }}</span>
+                                {% elif deal.stage == 'proposal' %}
+                                    <span class="badge bg-warning text-dark">{{ deal.get_stage_display }}</span>
+                                {% elif deal.stage == 'won' %}
+                                    <span class="badge bg-success">{{ deal.get_stage_display }}</span>
+                                {% elif deal.stage == 'lost' %}
+                                    <span class="badge bg-danger">{{ deal.get_stage_display }}</span>
+                                {% else %}
+                                    <span class="badge bg-dark">{{ deal.get_stage_display }}</span>
+                                {% endif %}
+                            <td>{{ deal.expected_close_date|default:"-" }}</td>
+                            <td>                               
+                                <a href="{% url 'deal_edit' deal.pk %}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger delete-deal-btn"
+                                        data-url="{% url 'deal_delete' deal.pk %}"
+                                        data-title="{{ deal.title }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="mb-0">No deals found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<form id="deleteDealForm" method="post" style="display: none;">
+    {% csrf_token %}
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const deleteButtons = document.querySelectorAll(".delete-deal-btn");
+    const deleteForm = document.getElementById("deleteDealForm");
+
+    deleteButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            const url = this.getAttribute("data-url");
+            const title = this.getAttribute("data-title");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: `You are about to delete deal: ${title}`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, delete it"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.setAttribute("action", url);
+                    deleteForm.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

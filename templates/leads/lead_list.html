@@ -109,12 +109,16 @@
                                 <a href="{% url 'deal_create' %}?lead={{ lead.pk }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-handshake"></i>
                                 </a>
+                                <a href="{% url 'task_add' %}?lead={{ lead.pk }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-tasks"></i>
+                                </a>
                                 <button type="button"
                                         class="btn btn-sm btn-danger delete-lead-btn"
                                         data-url="{% url 'lead_delete' lead.id %}"
                                         data-name="{{ lead }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                
                             </td>
                         </tr>
                         {% endfor %}

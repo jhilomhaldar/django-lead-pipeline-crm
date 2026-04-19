@@ -110,6 +110,9 @@
                                 <a href="{% url 'deal_edit' deal.pk %}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                <a href="{% url 'task_add' %}?deal={{ deal.id }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-tasks"></i>
+                                </a>
                                 <button type="button" class="btn btn-sm btn-danger delete-deal-btn"
                                         data-url="{% url 'deal_delete' deal.pk %}"
                                         data-title="{{ deal.title }}">

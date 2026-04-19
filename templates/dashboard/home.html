@@ -5,101 +5,310 @@
 
 {% block content %}
 <div class="container-fluid">
+
+    <!-- ===================== ROW 1: LEADS + DEALS STATS ===================== -->
     <div class="row">
+
+        <!-- Lead Stats -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted">Total Leads</h6>
-                            <h3 class="mb-0">{{ total_leads }}</h3>
-                        </div>
-                        <div class="fs-2 text-primary">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Total Leads</h6>
+                        <h3>{{ total_leads }}</h3>
                     </div>
+                    <i class="fa-solid fa-users fs-2 text-primary"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted">New Leads</h6>
-                            <h3 class="mb-0">{{ new_leads }}</h3>
-                        </div>
-                        <div class="fs-2 text-info">
-                            <i class="fa-solid fa-user-plus"></i>
-                        </div>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">New Leads</h6>
+                        <h3>{{ new_leads }}</h3>
                     </div>
+                    <i class="fa-solid fa-user-plus fs-2 text-info"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted">Contacted Leads</h6>
-                            <h3 class="mb-0">{{ contacted_leads }}</h3>
-                        </div>
-                        <div class="fs-2 text-primary">
-                            <i class="fa-solid fa-phone"></i>
-                        </div>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Contacted Leads</h6>
+                        <h3>{{ contacted_leads }}</h3>
                     </div>
+                    <i class="fa-solid fa-phone fs-2 text-primary"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted">Qualified Leads</h6>
-                            <h3 class="mb-0">{{ qualified_leads }}</h3>
-                        </div>
-                        <div class="fs-2 text-success">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Qualified Leads</h6>
+                        <h3>{{ qualified_leads }}</h3>
                     </div>
+                    <i class="fa-solid fa-circle-check fs-2 text-success"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-muted">Lost Leads</h6>
-                            <h3 class="mb-0">{{ lost_leads }}</h3>
-                        </div>
-                        <div class="fs-2 text-danger">
-                            <i class="fa-solid fa-user-xmark"></i>
-                        </div>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Lost Leads</h6>
+                        <h3>{{ lost_leads }}</h3>
                     </div>
+                    <i class="fa-solid fa-user-xmark fs-2 text-danger"></i>
                 </div>
+            </div>
+        </div>
+
+        <!-- Deal Stats -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Total Deals</h6>
+                        <h3>{{ total_deals }}</h3>
+                    </div>
+                    <i class="fa-solid fa-handshake fs-2 text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Open Deals</h6>
+                        <h3>{{ open_deals }}</h3>
+                    </div>
+                    <i class="fa-solid fa-chart-line fs-2 text-info"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Won Deals</h6>
+                        <h3>{{ won_deals }}</h3>
+                    </div>
+                    <i class="fa-solid fa-trophy fs-2 text-success"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Lost Deals</h6>
+                        <h3>{{ lost_deals_count }}</h3>
+                    </div>
+                    <i class="fa-solid fa-circle-xmark fs-2 text-danger"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== ROW 2: VALUE SUMMARY ===================== -->
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Total Pipeline Value</h6>
+                        <h3>₹{{ total_pipeline_value }}</h3>
+                    </div>
+                    <i class="fa-solid fa-sack-dollar fs-2 text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Open Value</h6>
+                        <h3>₹{{ open_value }}</h3>
+                    </div>
+                    <i class="fa-solid fa-briefcase fs-2 text-info"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Won Value</h6>
+                        <h3>₹{{ won_value }}</h3>
+                    </div>
+                    <i class="fa-solid fa-coins fs-2 text-success"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===================== ROW 3: QUICK ACTIONS ===================== -->
+    <div class="row">
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Leads</h5>
+                        <p class="mb-0">Manage and track all leads.</p>
+                        <a href="{% url 'lead_list' %}" class="btn btn-primary mt-3">View Leads</a>
+                    </div>
+                    <i class="fas fa-users fa-2x text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Deals</h5>
+                        <p class="mb-0">Manage your opportunities.</p>
+                        <a href="{% url 'deal_list' %}" class="btn btn-success mt-3">View Deals</a>
+                        <a href="{% url 'deal_pipeline' %}" class="btn btn-outline-success mt-3 ms-2">Pipeline</a>
+                    </div>
+                    <i class="fas fa-handshake fa-2x text-success"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="row">
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <span>Recent Leads</span>
+                <a href="{% url 'lead_list' %}" class="btn btn-sm btn-light">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent_leads %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lead in recent_leads %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'lead_detail' lead.pk %}" class="text-decoration-none fw-semibold">
+                                            {{ lead }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if lead.status == 'New' %}
+                                            <span class="badge bg-info">New</span>
+                                        {% elif lead.status == 'Contacted' %}
+                                            <span class="badge bg-primary">Contacted</span>
+                                        {% elif lead.status == 'Qualified' %}
+                                            <span class="badge bg-success">Qualified</span>
+                                        {% elif lead.status == 'Lost' %}
+                                            <span class="badge bg-danger">Lost</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ lead.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{% url 'lead_detail' lead.pk %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No leads found.</p>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm border-0">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <span>Recent Deals</span>
+                <a href="{% url 'deal_list' %}" class="btn btn-sm btn-light">View All</a>
+            </div>
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="card-title">Deals</h5>
-                        <p class="card-text mb-0">Manage your business opportunities.</p>
+                {% if recent_deals %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Stage</th>
+                                    <th>Value</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for deal in recent_deals %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'deal_detail' deal.pk %}" class="text-decoration-none fw-semibold">
+                                            {{ deal.title }}
+                                        </a>
+                                        <br>
+                                        <small class="text-muted">{{ deal.lead }}</small>
+                                    </td>
+                                    <td>
+                                        {% if deal.stage == 'new' %}
+                                            <span class="badge bg-secondary">{{ deal.get_stage_display }}</span>
+                                        {% elif deal.stage == 'qualified' %}
+                                            <span class="badge bg-primary">{{ deal.get_stage_display }}</span>
+                                        {% elif deal.stage == 'proposal' %}
+                                            <span class="badge bg-warning text-dark">{{ deal.get_stage_display }}</span>
+                                        {% elif deal.stage == 'won' %}
+                                            <span class="badge bg-success">{{ deal.get_stage_display }}</span>
+                                        {% elif deal.stage == 'lost' %}
+                                            <span class="badge bg-danger">{{ deal.get_stage_display }}</span>
+                                        {% else %}
+                                            <span class="badge bg-dark">{{ deal.get_stage_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>₹{{ deal.value }}</td>
+                                    <td class="text-end">
+                                        <a href="{% url 'deal_detail' deal.pk %}" class="btn btn-sm btn-outline-success">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                    <div>
-                        <i class="fas fa-handshake fa-2x text-primary"></i>
-                    </div>
-                </div>
-                <a href="{% url 'deal_list' %}" class="btn btn-primary mt-3">View Deals</a>
+                {% else %}
+                    <p class="text-muted mb-0">No deals found.</p>
+                {% endif %}
             </div>
         </div>
     </div>

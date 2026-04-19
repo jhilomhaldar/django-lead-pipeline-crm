@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 from .models import Deal
 from .forms import DealForm
 from django.http import JsonResponse
@@ -32,12 +33,18 @@ def deal_list(request):
     if max_value:
         deals = deals.filter(value__lte=max_value)
 
+    # Pagination
+    paginator = Paginator(deals, 5)   # 5 deals per page
+    page_number = request.GET.get('page')
+    deals = paginator.get_page(page_number)
+
     # For dropdowns
     from leads.models import Lead
     leads = Lead.objects.all()
 
     context = {
         'deals': deals,
+        'page_obj': deals,
         'leads': leads,
         'search': search,
         'selected_stage': stage,
@@ -51,6 +58,8 @@ def deal_list(request):
 
 @login_required
 def deal_create(request):
+    lead_id = request.GET.get('lead')
+
     if request.method == 'POST':
         form = DealForm(request.POST)
         if form.is_valid():
@@ -58,13 +67,15 @@ def deal_create(request):
             messages.success(request, 'Deal created successfully.')
             return redirect('deal_list')
     else:
-        form = DealForm()
+        initial_data = {}
+        if lead_id:
+            initial_data['lead'] = lead_id
+        form = DealForm(initial=initial_data)
 
     return render(request, 'deals/deal_form.html', {
         'form': form,
         'page_title': 'Add Deal'
     })
-
 
 @login_required
 def deal_edit(request, pk):

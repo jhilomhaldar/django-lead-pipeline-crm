@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Lead Details</h2>
+        <div>
+            <a href="{% url 'lead_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <a href="{% url 'lead_edit' lead.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="{% url 'deal_create' %}?lead={{ lead.pk }}" class="btn btn-success">
+                <i class="fas fa-handshake"></i>
+                {% if related_deals.count > 0 %}Add Deal{% else %}Convert to Deal{% endif %}
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">{{ lead }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Name:</strong> {{ lead }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> {{ lead.email|default:"-" }}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Phone:</strong> {{ lead.phone|default:"-" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Status:</strong> {{ lead.status|default:"-" }}</p>
+                </div>
+            </div>
+
+            {% if lead.company %}
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Company:</strong> {{ lead.company }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Related Deals</h5>
+            <span class="badge bg-light text-dark">{{ related_deals.count }}</span>
+        </div>
+        <div class="card-body">
+            {% if related_deals %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Value</th>
+                                <th>Stage</th>
+                                <th>Expected Close Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for deal in related_deals %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'deal_detail' deal.pk %}" class="text-decoration-none fw-semibold">
+                                        {{ deal.title }}
+                                    </a>
+                                </td>
+                                <td>₹{{ deal.value }}</td>
+                                <td>
+                                    {% if deal.stage == 'new' %}
+                                        <span class="badge bg-secondary">{{ deal.get_stage_display }}</span>
+                                    {% elif deal.stage == 'qualified' %}
+                                        <span class="badge bg-primary">{{ deal.get_stage_display }}</span>
+                                    {% elif deal.stage == 'proposal' %}
+                                        <span class="badge bg-warning text-dark">{{ deal.get_stage_display }}</span>
+                                    {% elif deal.stage == 'won' %}
+                                        <span class="badge bg-success">{{ deal.get_stage_display }}</span>
+                                    {% elif deal.stage == 'lost' %}
+                                        <span class="badge bg-danger">{{ deal.get_stage_display }}</span>
+                                    {% else %}
+                                        <span class="badge bg-dark">{{ deal.get_stage_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ deal.expected_close_date|default:"-" }}</td>
+                                <td>
+                                    <a href="{% url 'deal_detail' deal.pk %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'deal_edit' deal.pk %}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-3">No deals linked to this lead yet.</p>
+                    <a href="{% url 'deal_create' %}?lead={{ lead.pk }}" class="btn btn-success">
+                        <i class="fas fa-handshake"></i> Convert to Deal
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

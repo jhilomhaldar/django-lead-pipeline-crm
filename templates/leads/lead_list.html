@@ -1,66 +1,95 @@
 {% extends 'base.html' %}
 
-{% block page_title %}Leads{% endblock %}
-{% block page_subtitle %}Manage all your leads from one place.{% endblock %}
-
 {% block content %}
-<div class="container-fluid">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">      
-
-       <div class="d-flex gap-2">
-        <form method="get" class="d-flex gap-2">
-            <input type="text" name="q" class="form-control" placeholder="Search leads..." value="{{ request.GET.q }}">
-
-            <select name="status" class="form-select">
-                <option value="">All Status</option>
-                <option value="New" {% if request.GET.status == 'New' %}selected{% endif %}>New</option>
-                <option value="Contacted" {% if request.GET.status == 'Contacted' %}selected{% endif %}>Contacted</option>
-                <option value="Qualified" {% if request.GET.status == 'Qualified' %}selected{% endif %}>Qualified</option>
-                <option value="Lost" {% if request.GET.status == 'Lost' %}selected{% endif %}>Lost</option>
-            </select>
-
-            <button class="btn btn-outline-secondary" type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-
-            <a href="{% url 'lead_list' %}" class="btn btn-outline-dark">
-                <i class="fa fa-rotate-left"></i>
+<div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Leads</h2>
+        <div>
+            <a href="{% url 'lead_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Lead
             </a>
-        </form>
-
-        <a href="{% url 'lead_create' %}" class="btn btn-primary">
-            <i class="fa-solid fa-plus me-1"></i> Add New Lead
-        </a>
-    </div>
+        </div>
     </div>
 
-    <div class="card shadow-sm border-0">
+    <div class="card mb-3 shadow-sm">
         <div class="card-body">
+            <form method="get">
+                <div class="row g-2">
+
+                    <div class="col-md-4">
+                        <input type="text"
+                               name="q"
+                               value="{{ request.GET.q }}"
+                               class="form-control"
+                               placeholder="Search leads...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">All Status</option>
+                            <option value="New" {% if request.GET.status == 'New' %}selected{% endif %}>New</option>
+                            <option value="Contacted" {% if request.GET.status == 'Contacted' %}selected{% endif %}>Contacted</option>
+                            <option value="Qualified" {% if request.GET.status == 'Qualified' %}selected{% endif %}>Qualified</option>
+                            <option value="Lost" {% if request.GET.status == 'Lost' %}selected{% endif %}>Lost</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-5 mt-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Filter
+                        </button>
+
+                        <a href="{% url 'lead_list' %}" class="btn btn-secondary">
+                            Reset
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if leads %}
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
                         <tr>
                             <th>SL</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Company</th>
+                            <th>Deals</th>
                             <th>Status</th>
                             <th>Created</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for lead in leads %}
                         <tr>
                             <td>{{ leads.start_index|add:forloop.counter0 }}</td>
-                            <td>{{ lead.first_name }} {{ lead.last_name }}</td>
-                            <td>{{ lead.email }}</td>
-                            <td>{{ lead.phone }}</td>
-                            <td>{{ lead.company }}</td>
                             <td>
-                               {% if lead.status == 'New' %}
+                                <a href="{% url 'lead_detail' lead.pk %}" class="text-decoration-none fw-semibold">
+                                    {{ lead }}
+                                </a>
+                            </td>
+                            <td>{{ lead.email|default:"-" }}</td>
+                            <td>{{ lead.phone|default:"-" }}</td>
+                            <td>{{ lead.company|default:"-" }}</td>
+                            <td>
+                                {% if lead.deals.count > 0 %}
+                                    <span class="badge bg-success">
+                                        {{ lead.deals.count }} Deal{{ lead.deals.count|pluralize }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">No Deals</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if lead.status == 'New' %}
                                     <span class="badge bg-primary">{{ lead.status }}</span>
                                 {% elif lead.status == 'Contacted' %}
                                     <span class="badge bg-info text-dark">{{ lead.status }}</span>
@@ -73,91 +102,92 @@
                                 {% endif %}
                             </td>
                             <td>{{ lead.created_at|date:"d M Y, h:i A" }}</td>
-                           <td>
-                               <a href="{% url 'lead_edit' lead.id %}" class="btn btn-sm btn-warning">
-                                    <i class="fa-solid fa-pen"></i> Edit
+                            <td>
+                                <a href="{% url 'lead_edit' lead.id %}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
                                 </a>
-
-                                <a href="javascript:void(0);"
-                                class="btn btn-sm btn-danger delete-lead-btn"
-                                data-url="{% url 'lead_delete' lead.id %}">
-                                    <i class="fa-solid fa-trash"></i> Delete
+                                <a href="{% url 'deal_create' %}?lead={{ lead.pk }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-handshake"></i>
                                 </a>
+                                <button type="button"
+                                        class="btn btn-sm btn-danger delete-lead-btn"
+                                        data-url="{% url 'lead_delete' lead.id %}"
+                                        data-name="{{ lead }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="8" class="text-center text-muted">No leads found</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+
+                {% if leads.has_other_pages %}
+                <div class="mt-4 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination">
+
+                            {% if leads.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?page={{ leads.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
+                                        Previous
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in leads.paginator.page_range %}
+                                {% if leads.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
+                                            {{ num }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if leads.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?page={{ leads.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
+                                        Next
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
             </div>
+            {% else %}
+                <p class="mb-0">No leads found.</p>
+            {% endif %}
         </div>
     </div>
-    {% if leads.has_other_pages %}
-    <nav class="mt-4">
-        <ul class="pagination justify-content-center">
-
-            {% if leads.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ leads.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
-                        Previous
-                    </a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">Previous</span>
-                </li>
-            {% endif %}
-
-            {% for num in leads.paginator.page_range %}
-                {% if leads.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
-                    </li>
-                {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
-                            {{ num }}
-                        </a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-            {% if leads.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ leads.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">
-                        Next
-                    </a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">Next</span>
-                </li>
-            {% endif %}
-
-        </ul>
-    </nav>
-    {% endif %}
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const deleteButtons = document.querySelectorAll('.delete-lead-btn');
 
-    deleteButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const deleteUrl = this.getAttribute('data-url');
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const deleteButtons = document.querySelectorAll(".delete-lead-btn");
+
+    deleteButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            const deleteUrl = this.getAttribute("data-url");
+            const leadName = this.getAttribute("data-name");
 
             Swal.fire({
-                title: 'Are you sure?',
-                text: 'This lead will be deleted permanently.',
-                icon: 'warning',
+                title: "Are you sure?",
+                text: `You are about to delete lead: ${leadName}`,
+                icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, delete it',
-                cancelButtonText: 'Cancel'
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#6c757d",
+                confirmButtonText: "Yes, delete it"
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = deleteUrl;

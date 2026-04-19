@@ -19,7 +19,10 @@ class DealForm(forms.ModelForm):
         model = Deal
         fields = ['title', 'lead', 'value', 'stage', 'expected_close_date', 'notes']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter deal title'
+            }),
             'value': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'stage': forms.Select(attrs={'class': 'form-select'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),

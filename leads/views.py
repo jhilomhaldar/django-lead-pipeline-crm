@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import Lead
 from .forms import LeadForm
 from django.db.models import Q
 from django.core.paginator import Paginator
+from deals.models import Deal
 
-
+@login_required
 def lead_list(request):
     q = request.GET.get('q', '')
     status = request.GET.get('status', '')
@@ -29,7 +31,17 @@ def lead_list(request):
 
     return render(request, 'leads/lead_list.html', {'leads': leads})
 
+@login_required
+def lead_detail(request, pk):
+    lead = get_object_or_404(Lead, pk=pk)
+    related_deals = Deal.objects.filter(lead=lead).order_by('-created_at')
 
+    return render(request, 'leads/lead_detail.html', {
+        'lead': lead,
+        'related_deals': related_deals,
+    })
+
+@login_required
 def lead_create(request):
     if request.method == 'POST':
         form = LeadForm(request.POST)
@@ -47,6 +59,7 @@ def lead_create(request):
                                                     })
 
 
+@login_required
 def lead_edit(request, pk):
     lead = get_object_or_404(Lead, pk=pk)
 
@@ -63,10 +76,10 @@ def lead_edit(request, pk):
                                                         'page_title': 'Edit Lead',
                                                         'page_subtitle': 'Update lead information in Room CRM.',
                                                         'button_text': 'Update Lead',
-                                                    })
-                                                    
+                                                    })    
+                                                
 
-
+@login_required
 def lead_delete(request, pk):
     lead = get_object_or_404(Lead, pk=pk)
     lead.delete()

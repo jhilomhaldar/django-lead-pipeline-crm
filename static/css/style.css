@@ -1,0 +1,24 @@
+/* General */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #f8f9fa;
+}
+
+/* Cards */
+.card {
+    border-radius: 8px;
+}
+
+/* Table */
+.table {
+    font-size: 14px;
+}
+
+/* Buttons spacing */
+.btn {
+    border-radius: 6px;
+}
